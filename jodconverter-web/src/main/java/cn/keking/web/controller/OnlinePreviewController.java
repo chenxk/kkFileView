@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.Arrays;
 import java.util.List;
 
@@ -60,6 +62,11 @@ public class OnlinePreviewController {
     @ResponseBody
     @RequestMapping(value = "/firstImage", method = RequestMethod.GET)
     public List<String> getFirstImage(String url, Model model, HttpServletRequest req) {
+        try {
+            url = URLDecoder.decode(url,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
         model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
@@ -73,6 +80,11 @@ public class OnlinePreviewController {
 
     @RequestMapping(value = "/onlinePreview", method = RequestMethod.GET)
     public String onlinePreview(String url, Model model, HttpServletRequest req) {
+        try {
+            url = URLDecoder.decode(url,"utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
         model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
