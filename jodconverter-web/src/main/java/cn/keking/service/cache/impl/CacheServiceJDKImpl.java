@@ -108,6 +108,11 @@ public class CacheServiceJDKImpl implements CacheService {
     }
 
     @Override
+    public Map<String, Integer> getPdfImageCache() {
+        return pdfImagesCache;
+    }
+
+    @Override
     public void putPdfImageCache(String pdfFilePath, int num) {
         if (pdfImagesCache == null) {
             initPdfImagesCachePool(CacheService.DEFAULT_PDFIMG_CAPACITY);

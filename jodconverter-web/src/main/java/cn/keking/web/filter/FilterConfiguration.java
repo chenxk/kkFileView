@@ -45,6 +45,7 @@ public class FilterConfiguration {
         filterUri.add("/index");
         filterUri.add("/onlinePreview");
         filterUri.add("/picturesPreview");
+        filterUri.add("/firstImage");
         BaseUrlFilter filter = new BaseUrlFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);

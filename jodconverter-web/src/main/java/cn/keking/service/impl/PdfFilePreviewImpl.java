@@ -10,7 +10,9 @@ import cn.keking.utils.PdfUtils;
 import cn.keking.web.filter.BaseUrlFilter;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,8 +40,8 @@ public class PdfFilePreviewImpl implements FilePreview {
 
     @Override
     public String filePreviewHandle(String url, Model model, FileAttribute fileAttribute) {
-        String suffix=fileAttribute.getSuffix();
-        String fileName=fileAttribute.getName();
+        String suffix = fileAttribute.getSuffix();
+        String fileName = fileAttribute.getName();
         String officePreviewType = model.asMap().get("officePreviewType") == null ? ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
         String baseUrl = BaseUrlFilter.getBaseUrl();
         String pdfName = fileName.substring(0, fileName.lastIndexOf(".") + 1) + "pdf";
@@ -62,7 +64,7 @@ public class PdfFilePreviewImpl implements FilePreview {
             List<String> imageUrls = pdfUtils.pdf2jpg(outFilePath, pdfName, baseUrl);
             if (imageUrls == null || imageUrls.size() < 1) {
                 model.addAttribute("msg", "pdf转图片异常，请联系管理员");
-                model.addAttribute("fileType",fileAttribute.getSuffix());
+                model.addAttribute("fileType", fileAttribute.getSuffix());
                 return "fileNotSupported";
             }
             model.addAttribute("imgurls", imageUrls);
@@ -95,5 +97,59 @@ public class PdfFilePreviewImpl implements FilePreview {
             }
         }
         return "pdf";
+    }
+
+
+    @Override
+    public List<String> filePreviewImages(String url, Model model, FileAttribute fileAttribute) {
+        // 预览Type，参数传了就取参数的，没传取系统默认
+        //String officePreviewType = model.asMap().get("officePreviewType") == null ? ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
+        String ct = (String) model.asMap().get("ct");
+        Integer count = null;
+        if (!StringUtils.isEmpty(ct)) {
+            count = Integer.parseInt(ct);
+        }
+        String suffix = fileAttribute.getSuffix();
+        String fileName = fileAttribute.getName();
+        String officePreviewType = model.asMap().get("officePreviewType") == null ? ConfigConstants.getOfficePreviewType() : model.asMap().get("officePreviewType").toString();
+        String baseUrl = BaseUrlFilter.getBaseUrl();
+        String pdfName = fileName.substring(0, fileName.lastIndexOf(".") + 1) + "pdf";
+        String outFilePath = FILE_DIR + pdfName;
+        if (OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_IMAGE.equals(officePreviewType) || OfficeFilePreviewImpl.OFFICE_PREVIEW_TYPE_ALL_IMAGES.equals(officePreviewType)) {
+            //当文件不存在时，就去下载
+            if (!fileUtils.listConvertedFiles().containsKey(pdfName) || !ConfigConstants.isCacheEnabled()) {
+                ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, fileName);
+                if (0 != response.getCode()) {
+                    model.addAttribute("fileType", suffix);
+                    model.addAttribute("msg", response.getMsg());
+                    return new ArrayList<>();
+                }
+                outFilePath = response.getContent();
+                if (ConfigConstants.isCacheEnabled()) {
+                    // 加入缓存
+                    fileUtils.addConvertedFile(pdfName, fileUtils.getRelativePath(outFilePath));
+                }
+            }
+        } else {
+            // 不是http开头，浏览器不能直接访问，需下载到本地
+            if (url != null && !url.toLowerCase().startsWith("http")) {
+                if (!fileUtils.listConvertedFiles().containsKey(pdfName) || !ConfigConstants.isCacheEnabled()) {
+                    ReturnResponse<String> response = downloadUtils.downLoad(fileAttribute, pdfName);
+                    if (0 != response.getCode()) {
+                        model.addAttribute("fileType", suffix);
+                        model.addAttribute("msg", response.getMsg());
+                        return new ArrayList<>();
+                    }
+                    model.addAttribute("pdfUrl", fileUtils.getRelativePath(response.getContent()));
+                    if (ConfigConstants.isCacheEnabled()) {
+                        // 加入缓存
+                        fileUtils.addConvertedFile(pdfName, fileUtils.getRelativePath(outFilePath));
+                    }
+                }
+            } else {
+                return new ArrayList<>();
+            }
+        }
+        return pdfUtils.pdf2jpg(outFilePath, pdfName, baseUrl, count);
     }
 }

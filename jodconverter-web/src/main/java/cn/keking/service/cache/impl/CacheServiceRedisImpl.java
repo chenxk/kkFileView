@@ -89,6 +89,11 @@ public class CacheServiceRedisImpl implements CacheService {
     }
 
     @Override
+    public Map<String, Integer> getPdfImageCache() {
+        return redissonClient.getMapCache(FILE_PREVIEW_PDF_IMGS_KEY);
+    }
+
+    @Override
     public void cleanCache() {
         cleanPdfCache();
         cleanImgCache();

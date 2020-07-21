@@ -49,6 +49,27 @@ public class OnlinePreviewController {
         this.downloadUtils = downloadUtils;
     }
 
+    /**
+     * 获取附件的前N张图片
+     *
+     * @param url
+     * @param model
+     * @param req
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/firstImage", method = RequestMethod.GET)
+    public List<String> getFirstImage(String url, Model model, HttpServletRequest req) {
+        FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
+        req.setAttribute("fileKey", req.getParameter("fileKey"));
+        model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
+        model.addAttribute("officePreviewType", req.getParameter("officePreviewType"));
+        FilePreview filePreview = previewFactory.get(fileAttribute);
+        logger.info("预览文件url：{}，previewType：{}", url, fileAttribute.getType());
+        String ct = req.getParameter("ct");
+        model.asMap().put("ct", ct);
+        return filePreview.filePreviewImages(url, model, fileAttribute);
+    }
 
     @RequestMapping(value = "/onlinePreview", method = RequestMethod.GET)
     public String onlinePreview(String url, Model model, HttpServletRequest req) {
@@ -63,7 +84,7 @@ public class OnlinePreviewController {
 
 
     @RequestMapping(value = "/picturesPreview")
-    public String picturesPreview(Model model, HttpServletRequest req)  {
+    public String picturesPreview(Model model, HttpServletRequest req) {
         String urls = req.getParameter("urls");
         String currentUrl = req.getParameter("currentUrl");
         logger.info("预览文件url：{}，urls：{}", currentUrl, urls);
@@ -73,11 +94,12 @@ public class OnlinePreviewController {
         model.addAttribute("currentUrl", currentUrl);
         return "picture";
     }
+
     /**
      * 根据url获取文件内容
      * 当pdfjs读取存在跨域问题的文件时将通过此接口读取
      *
-     * @param urlPath url
+     * @param urlPath  url
      * @param response response
      */
     @RequestMapping(value = "/getCorsFile", method = RequestMethod.GET)
@@ -92,6 +114,7 @@ public class OnlinePreviewController {
 
     /**
      * 通过api接口入队
+     *
      * @param url 请编码后在入队
      */
     @GetMapping("/addTask")
