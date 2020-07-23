@@ -51,7 +51,8 @@ public class ShedulerClean {
 
         File file = new File(fileDir);
         File[] files = file.listFiles();
-        if (files == null) {
+        if (files == null || files.length == 0) {
+            cacheService.cleanCache();
             return;
         }
         for (File listFile : files) {
