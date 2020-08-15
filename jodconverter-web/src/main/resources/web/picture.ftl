@@ -14,7 +14,7 @@
             width: 100%;
         }
         body {
-            background-color: #404040;
+            background-color: #ffffff;
         }
         #dowebok { width: 800px; margin: 0 auto; font-size: 0;}
         #dowebok li {  display: inline-block;width: 50px;height: 50px; margin-left: 1%; padding-top: 1%;}

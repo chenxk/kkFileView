@@ -16,7 +16,7 @@
         width: 100%;
     }
     body {
-        background-color: #404040;
+        background-color: #ffffff;
     }
     .m {
         width: 1024px;

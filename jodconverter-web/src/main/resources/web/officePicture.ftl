@@ -14,7 +14,7 @@
             width: 100%;
         }
         body {
-            background-color: #404040;
+            background-color: #ffffff;
         }
         .container {
             width: 100%;
@@ -35,8 +35,10 @@
     </#list>
 </div>
 
+<#--
 <img src="images/pdf.svg" width="63" height="63" style="position: fixed; cursor: pointer; top: 40%; right: 48px; z-index: 999;"
      alt="使用PDF预览" title="使用PDF预览" onclick="changePreviewType('pdf')"/>
+-->
 
 <script src="js/watermark.js" type="text/javascript"></script>
 <script>
