@@ -60,17 +60,20 @@ public class ShedulerClean {
                 continue;
             }
             String name = listFile.getName();
+            logger.info("delete file from disk:{}", listFile.getName());
             int index = name.lastIndexOf(".");
-            String folder = name.substring(0, index);
-            long lastModified = listFile.lastModified();
-            if (System.currentTimeMillis() - lastModified >= createTime * 1000 * 60) {
-                boolean delete = listFile.delete();
-                String remove = pdfCache.remove(name);
-                Integer remove1 = pdfImageCache.remove(listFile.getAbsolutePath());
-                boolean b = DeleteFileUtil.deleteDirectory(fileDir + folder);
-                logger.info("delete file from disk:{},delete result:{},pdfCache remove:{}," +
-                                "pdfImageCache remove:{},folder delete result:{}",
-                        listFile.getName(), delete, remove, remove1, b);
+            if (index > -1) {
+                String folder = name.substring(0, index);
+                long lastModified = listFile.lastModified();
+                if (System.currentTimeMillis() - lastModified >= createTime * 1000 * 60) {
+                    boolean delete = listFile.delete();
+                    String remove = pdfCache.remove(name);
+                    Integer remove1 = pdfImageCache.remove(listFile.getAbsolutePath());
+                    boolean b = DeleteFileUtil.deleteDirectory(fileDir + folder);
+                    logger.info("delete file from disk:{},delete result:{},pdfCache remove:{}," +
+                                    "pdfImageCache remove:{},folder delete result:{}",
+                            listFile.getName(), delete, remove, remove1, b);
+                }
             }
         }
         cacheService.initIMGCachePool(CacheService.DEFAULT_IMG_CAPACITY);
