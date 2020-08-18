@@ -19,9 +19,15 @@
         .container {
             width: 100%;
             height: 100%;
+            transform-origin: top left;
         }
         .img-area {
             text-align: center
+        }
+        .my-photo{
+            max-width: 100%;
+            cursor: pointer;
+            pointer-events: none;
         }
         .img-scale{
             position: fixed;
@@ -42,14 +48,13 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container" id="box-contanier">
     <#list imgurls as img>
         <div class="img-area">
-            <img class="my-photo" alt="loading" title="查看大图" style="cursor: pointer;" data-src="${img}" src="images/loading.gif" onclick="changePreviewType('allImages')">
+            <img class="my-photo" alt="loading" title="查看大图" style="cursor: pointer;" data-src="${img}" src="images/loading.gif">
         </div>
     </#list>
 </div>
-
 <div class="img-scale">
     <ul>
         <li onclick="scaleImg()" class="hide"><img src="images/i-original@2x.png" alt=""></li>
@@ -58,14 +63,9 @@
         <li onclick="shrink()"><img src="images/i-narrow@2x.png" alt=""></li>
     </ul>
 </div>
-
-<#--
-<img src="images/pdf.svg" width="63" height="63" style="position: fixed; cursor: pointer; top: 40%; right: 48px; z-index: 999;"
-     alt="使用PDF预览" title="使用PDF预览" onclick="changePreviewType('pdf')"/>
--->
-
+<#--<img src="images/pdf.svg" width="63" height="63" style="position: fixed; cursor: pointer; top: 40%; right: 48px; z-index: 999;" alt="使用PDF预览" title="使用PDF预览" onclick="changePreviewType('pdf')"/>-->
 <script src="js/watermark.js" type="text/javascript"></script>
-<script src="js/jquery-3.0.0.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
 <script>
     window.onload = function () {
         /*初始化水印*/
@@ -104,13 +104,19 @@
             window.location.href = url;
         }
     }
-
     var fullscreen = false;
     // 放大
     var proportion = 1;
     function amplifier() {
         proportion = proportion + 0.1;
-        $(".img-area img").css("transform", "scale("+ proportion +")")
+        if(proportion >= 1.8){
+            proportion = 1.8
+        }
+        $(".container").css("transform", "scale("+ proportion + "," + proportion + ")")
+        if(proportion > 1){
+            $(".container").css("transform-origin", "top left")
+        }
+//        $(".img-area").css("transform", "scale("+ proportion  + "," + proportion + ")")
 //        proportion = proportion + 0.2;
 //        var Scale = document.getElementById("box-contanier");
 //        Scale.style.transform = "scale("+ proportion +")";
@@ -118,7 +124,14 @@
     // 缩小
     function shrink() {
         proportion = proportion - 0.1;
-        $(".img-area img").css("transform", "scale("+ proportion +")")
+        if(proportion <= 0.5){
+            proportion = 0.5
+        }
+        $(".container").css("transform", "scale("+ proportion + "," + proportion + ")")
+        if(proportion < 1){
+            $(".container").css("transform-origin", "center center")
+        }
+//        $(".img-area").css("transform", "scale("+ proportion + "," + proportion + ")")
 //        $(".img-area img").css("width", width * proportion)
 //        proportion = proportion - 0.2;
 //        var Scale = document.getElementById("box-contanier");
@@ -129,13 +142,15 @@
         if (fullscreen) {
             $(".img-scale li:first-child").addClass("hide").removeClass('show')
             $(".img-scale li:nth-child(2)").addClass("show").removeClass('hide')
-            $(".img-area img").css("transform", "scale(1)")
-            $(".img-area img").width("auto")
+            $(".container").css("transform", "scale(1)")
+            $(".container").width("auto")
+            proportion = 1
         }else{
             $(".img-scale li:first-child").addClass("show").removeClass('hide')
             $(".img-scale li:nth-child(2)").addClass("hide").removeClass('show')
-            $(".img-area img").css("transform", "scale(1)")
-            $(".img-area img").width("90%")
+            $(".container").css("transform", "scale(1)")
+            $(".container").width("100%")
+            proportion = 1;
         }
         // 改变当前全屏状态
         fullscreen = !fullscreen;
