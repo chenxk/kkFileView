@@ -51,7 +51,7 @@
 <div class="container" id="box-contanier">
     <#list imgurls as img>
         <div class="img-area">
-            <img class="my-photo" alt="loading" title="查看大图" style="cursor: pointer;" data-src="${img}" src="images/loading.gif">
+            <img class="my-photo" alt="loading" title="查看大图" style="cursor: pointer; pointer-events: none;" data-src="${img}" src="images/loading.gif">
         </div>
     </#list>
 </div>
