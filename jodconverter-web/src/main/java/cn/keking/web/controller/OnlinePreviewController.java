@@ -61,9 +61,11 @@ public class OnlinePreviewController {
      */
     @ResponseBody
     @RequestMapping(value = "/firstImage", method = RequestMethod.GET)
-    public List<String> getFirstImage(String url, Model model, HttpServletRequest req) {
+    public List<String> getFirstImage(Model model, HttpServletRequest req) {
+        String url = req.getParameter("url");
         try {
-            url = URLDecoder.decode(url,"utf-8");
+            logger.info("预览文件url：{}", url);
+            url = URLDecoder.decode(url, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
@@ -81,7 +83,7 @@ public class OnlinePreviewController {
     @RequestMapping(value = "/onlinePreview", method = RequestMethod.GET)
     public String onlinePreview(String url, Model model, HttpServletRequest req) {
         try {
-            url = URLDecoder.decode(url,"utf-8");
+            url = URLDecoder.decode(url, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
