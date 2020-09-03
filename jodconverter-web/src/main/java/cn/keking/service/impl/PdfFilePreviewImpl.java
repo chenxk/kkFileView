@@ -108,6 +108,8 @@ public class PdfFilePreviewImpl implements FilePreview {
         Integer count = null;
         if (!StringUtils.isEmpty(ct)) {
             count = Integer.parseInt(ct);
+        } else {
+            count = 1;
         }
         String suffix = fileAttribute.getSuffix();
         String fileName = fileAttribute.getName();

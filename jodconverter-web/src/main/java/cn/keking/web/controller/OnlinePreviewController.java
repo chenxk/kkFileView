@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yudian-it
@@ -62,6 +63,10 @@ public class OnlinePreviewController {
     public List<String> getFirstImage(Model model, HttpServletRequest req) {
         String url = req.getParameter("url");
         try {
+            Map<String, String[]> parameterMap = req.getParameterMap();
+            parameterMap.forEach((k, v) -> {
+                logger.info("key:{},value:{}", k, Arrays.asList(v));
+            });
             logger.info("预览文件url：{}", url);
             url = URLDecoder.decode(url, "utf-8");
         } catch (UnsupportedEncodingException e) {
@@ -106,7 +111,7 @@ public class OnlinePreviewController {
         String[] imgs = decodedUrl.split("\\|");
         List imgurls = Arrays.asList(imgs);
         model.addAttribute("imgurls", imgurls);
-        model.addAttribute("currentUrl",decodedCurrentUrl);
+        model.addAttribute("currentUrl", decodedCurrentUrl);
         return "picture";
     }
 

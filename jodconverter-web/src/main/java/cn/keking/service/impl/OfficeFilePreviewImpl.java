@@ -9,6 +9,8 @@ import cn.keking.utils.FileUtils;
 import cn.keking.utils.OfficeToPdf;
 import cn.keking.utils.PdfUtils;
 import cn.keking.web.filter.BaseUrlFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -22,6 +24,7 @@ import java.util.List;
  */
 @Service
 public class OfficeFilePreviewImpl implements FilePreview {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final FileUtils fileUtils;
 
@@ -109,6 +112,8 @@ public class OfficeFilePreviewImpl implements FilePreview {
         Integer count = null;
         if (!StringUtils.isEmpty(ct)) {
             count = Integer.parseInt(ct);
+        }else {
+            count = 1;
         }
         String baseUrl = BaseUrlFilter.getBaseUrl();
         String suffix = fileAttribute.getSuffix();
@@ -123,6 +128,7 @@ public class OfficeFilePreviewImpl implements FilePreview {
             if (0 != response.getCode()) {
                 model.addAttribute("fileType", suffix);
                 model.addAttribute("msg", response.getMsg());
+                logger.info("download result:{}", response.getMsg());
                 return new ArrayList<>();
             }
             filePath = response.getContent();
@@ -141,6 +147,8 @@ public class OfficeFilePreviewImpl implements FilePreview {
         if (!isHtml) {
             return pdfUtils.pdf2jpg(outFilePath, pdfName, baseUrl, count);
         }
+
+        logger.info("未知结果 for url :{}", url);
         return new ArrayList<>();
     }
 }

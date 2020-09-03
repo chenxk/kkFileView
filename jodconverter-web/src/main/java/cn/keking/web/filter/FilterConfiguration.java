@@ -40,6 +40,7 @@ public class FilterConfiguration extends WebMvcConfigurerAdapter {
         filterUri.add("/picturesPreview");
         filterUri.add("/getCorsFile");
         filterUri.add("/addTask");
+        filterUri.add("/firstImage");
         TrustHostFilter filter = new TrustHostFilter();
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
         registrationBean.setFilter(filter);
