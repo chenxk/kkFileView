@@ -63,7 +63,7 @@
         <li onclick="shrink()"><img src="images/i-narrow@2x.png" alt=""></li>
     </ul>
 </div>
-<#--<img src="images/pdf.svg" width="63" height="63" style="position: fixed; cursor: pointer; top: 40%; right: 48px; z-index: 999;" alt="使用PDF预览" title="使用PDF预览" onclick="changePreviewType('pdf')"/>-->
+<img src="images/pdf.svg" width="63" height="63" style="position: fixed; cursor: pointer; top: 40%; right: 48px; z-index: 999;" alt="使用PDF预览" title="使用PDF预览" onclick="changePreviewType('pdf')"/>
 <script src="js/watermark.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/jquery-3.0.0.min.js"></script>
 <script>
