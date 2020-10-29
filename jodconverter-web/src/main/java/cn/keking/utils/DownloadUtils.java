@@ -111,16 +111,26 @@ public class DownloadUtils {
 
     private InputStream getInputStreamFromUrl(String urlStr) {
         try {
+            //urlStr = URLEncoder.encode(urlStr, "UTF-8");
             URL url = new URL(urlStr);
             URLConnection connection = url.openConnection();
             if (connection instanceof HttpURLConnection) {
                 connection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
             }
             return connection.getInputStream();
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.warn("连接url异常：url：{}", urlStr);
+            logger.error(e.getMessage(), e);
             return null;
         }
+    }
+
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        //new DownloadUtils(null).getInputStreamFromUrl("http://localhost:8012/demo/XZ0022清律的继承和变化_瞿同祖.pdf");
+        //new DownloadUtils(null).getInputStreamFromUrl("http://localhost:8012/demo/XZ0022%E6%B8%85%E5%BE%8B%E7%9A%84%E7%BB%A7%E6%89%BF%E5%92%8C%E5%8F%98%E5%8C%96_%E7%9E%BF%E5%90%8C%E7%A5%96.pdf");
+        String urlStr = URLEncoder.encode("http://localhost:8012/demo/XZ0022清律的继承和变化_瞿同祖.pdf", "UTF-8");
+        System.out.println(urlStr);
+        System.out.println(URLDecoder.decode(urlStr,"utf-8"));
     }
 
     private byte[] getBytesFromStream(InputStream is) throws IOException {

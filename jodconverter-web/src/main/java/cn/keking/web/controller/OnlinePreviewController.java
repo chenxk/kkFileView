@@ -61,12 +61,12 @@ public class OnlinePreviewController {
     @RequestMapping(value = "/firstImage", method = RequestMethod.GET)
     public List<String> getFirstImage(Model model, HttpServletRequest req) {
         String url = req.getParameter("url");
-        try {
+        /*try {
             logger.info("预览文件url：{}", url);
             url = URLDecoder.decode(url, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }
+        }*/
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
         model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
@@ -80,11 +80,11 @@ public class OnlinePreviewController {
 
     @RequestMapping(value = "/onlinePreview")
     public String onlinePreview(String url, Model model, HttpServletRequest req) {
-        try {
+        /*try {
             url = URLDecoder.decode(url, "utf-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-        }
+        }*/
         FileAttribute fileAttribute = fileUtils.getFileAttribute(url);
         req.setAttribute("fileKey", req.getParameter("fileKey"));
         model.addAttribute("pdfDownloadDisable", ConfigConstants.getPdfDownloadDisable());
