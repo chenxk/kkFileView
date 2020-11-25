@@ -38,7 +38,11 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 
     <script src="viewer.js"></script>
-
+    <script language="Javascript">
+      /*禁用鼠标右键*/
+      document.oncontextmenu=new Function("event.returnValue=false");
+      document.onselectstart=new Function("event.returnValue=false");
+    </script>
   </head>
 
   <body tabindex="1" class="loadingInProgress">
